@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trunfo de Investimentos</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        background: url("./background.png") no-repeat center center fixed;
+        background-size: cover;
+      }
+
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 0;
+      }
+
+      .container {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 500px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+      }
+
+      .logo {
+        width: 130px;
+        height: 130px;
+        margin: 0 auto 20px;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+      }
+
+      .logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      .title {
+        color: #ffd700;
+        font-size: 2.5rem;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 50px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .button {
+        width: 80%;
+        padding: 18px;
+        margin: 12px 0;
+        border: none;
+        border-radius: 15px;
+        font-size: 1.3rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 1px;
+        text-decoration: none;
+        text-align: center;
+        display: inline-block;
+      }
+
+      .button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          120deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: all 0.5s ease;
+      }
+
+      .button:hover::before {
+        left: 100%;
+      }
+
+      .button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      .button:active {
+        transform: translateY(1px);
+      }
+
+      .button-primary {
+        background: linear-gradient(45deg, #00b341, #00d44d);
+        color: white;
+        box-shadow: 0 4px 15px rgba(0, 179, 65, 0.3);
+      }
+
+      .button-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .button-secondary:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+
+      .profile-icon {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.8rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .profile-icon:hover {
+        transform: translateY(-2px) scale(1.05);
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      .profile-icon:active {
+        transform: translateY(1px) scale(0.98);
+      }
+
+      @media (max-width: 600px) {
+        .button {
+          width: 90%;
+          padding: 16px;
+          font-size: 1.2rem;
+        }
+
+        .profile-icon {
+          width: 50px;
+          height: 50px;
+          font-size: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Ícone de perfil -->
+    <div class="profile-icon">👤</div>
+
+    <!-- Conteúdo principal -->
+    <div class="container">
+      <div class="logo">
+        <img src="./img/logo.png" alt="Logo Trunfo de Investimentos" />
+      </div>
+      <h1 class="title">TRUNFO DE<br />INVESTIMENTOS</h1>
+
+      <a href="jogar.html" class="button button-primary">JOGAR</a>
+      <a href="regras.html" class="button button-secondary">REGRAS</a>
+      <button class="button button-secondary">RANKING</button>
+    </div>
+  </body>
+</html>

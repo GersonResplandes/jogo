@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Modo Solo - Trunfo de Investimentos</title>
+    <style>
+      /* Melhorias de Acessibilidade */
+      :root {
+        --primary-color: #ffd700;
+        --success-color: #4caf50;
+        --danger-color: #f44336;
+        --warning-color: #ffc107;
+        --text-color: #ffffff;
+        --background-dark: rgba(0, 0, 0, 0.8);
+        --background-light: rgba(255, 255, 255, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        background: url("./img/background.png") no-repeat center center fixed;
+        background-size: cover;
+        overflow-x: hidden;
+        color: var(--text-color);
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          rgba(0, 50, 20, 0.9) 0%,
+          rgba(0, 30, 10, 0.95) 100%
+        );
+        z-index: 0;
+      }
+
+      .container {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 1200px;
+        padding: 15px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        margin-bottom: 20px;
+      }
+
+      .logo {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+      }
+
+      .logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .player-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .player-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+      }
+
+      .player-stats {
+        color: white;
+        font-size: 0.9rem;
+      }
+
+      .player-name {
+        font-weight: bold;
+        color: #ffd700;
+      }
+
+      .game-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 10px;
+      }
+
+      .cards-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        min-height: 200px;
+      }
+
+      .card {
+        position: relative;
+        width: 120px;
+        height: 180px;
+        background: var(--background-light);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 2px solid var(--primary-color);
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 15px;
+        background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1));
+        pointer-events: none;
+      }
+
+      .card:active {
+        transform: scale(0.98);
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .card-value {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #ffd700;
+      }
+
+      .card-icon {
+        font-size: 1.5rem;
+      }
+
+      .card-title {
+        color: white;
+        font-size: 0.9rem;
+        text-align: center;
+        margin: 10px 0;
+      }
+
+      .card-attributes {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .attribute {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: white;
+      }
+
+      .attribute-value {
+        color: #ffd700;
+        font-weight: bold;
+      }
+
+      .game-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 15px;
+        margin-top: 20px;
+      }
+
+      .attribute-selector {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+      }
+
+      .attribute-button {
+        position: relative;
+        padding: 12px 20px;
+        border: 2px solid var(--primary-color);
+        border-radius: 10px;
+        background: var(--background-light);
+        color: var(--text-color);
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 120px;
+        outline: none;
+      }
+
+      .attribute-button:focus-visible {
+        box-shadow: 0 0 0 3px var(--primary-color);
+      }
+
+      .attribute-button:active {
+        transform: scale(0.95);
+        background: var(--primary-color);
+        color: #000;
+      }
+
+      .attribute-button.selected {
+        background: var(--primary-color);
+        color: #000;
+        box-shadow: 0 0 15px var(--primary-color);
+      }
+
+      .game-status {
+        text-align: center;
+        color: white;
+        font-size: 1.1rem;
+        margin: 10px 0;
+      }
+
+      .round-info {
+        display: flex;
+        justify-content: space-between;
+        color: white;
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+      }
+
+      .score {
+        color: #ffd700;
+        font-weight: bold;
+      }
+
+      @media (min-width: 768px) {
+        .container {
+          padding: 30px;
+        }
+
+        .header {
+          padding: 20px 0;
+          margin-bottom: 40px;
+        }
+
+        .logo {
+          width: 70px;
+          height: 70px;
+        }
+
+        .player-avatar {
+          width: 50px;
+          height: 50px;
+          font-size: 2rem;
+        }
+
+        .player-stats {
+          font-size: 1.1rem;
+        }
+
+        .card {
+          width: 160px;
+          height: 240px;
+          padding: 20px;
+        }
+
+        .card-value {
+          font-size: 1.5rem;
+        }
+
+        .card-icon {
+          font-size: 2rem;
+        }
+
+        .card-title {
+          font-size: 1.1rem;
+        }
+
+        .attribute {
+          font-size: 1rem;
+        }
+
+        .attribute-button {
+          padding: 10px 20px;
+          font-size: 1rem;
+          min-width: 120px;
+        }
+
+        .game-status {
+          font-size: 1.3rem;
+        }
+      }
+
+      /* Estilos para os highlights */
+      .highlight-win {
+        color: #4caf50 !important;
+        text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+      }
+
+      .highlight-lose {
+        color: #f44336 !important;
+        text-shadow: 0 0 10px rgba(244, 67, 54, 0.5);
+      }
+
+      .highlight-draw {
+        color: #ffc107 !important;
+        text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+      }
+
+      /* Transições suaves */
+      .attribute-value {
+        transition: all 0.3s ease;
+      }
+
+      .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .card.win {
+        animation: cardWin 0.5s ease;
+        box-shadow: 0 0 20px var(--success-color);
+      }
+
+      .card.lose {
+        animation: cardLose 0.5s ease;
+        box-shadow: 0 0 20px var(--danger-color);
+      }
+
+      .card.draw {
+        animation: cardDraw 0.5s ease;
+        box-shadow: 0 0 20px var(--warning-color);
+      }
+
+      /* Instruções e Dicas */
+      .game-instructions {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 15px;
+        padding: 15px;
+        margin-bottom: 20px;
+        color: white;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+      }
+
+      .instruction-title {
+        color: #ffd700;
+        font-weight: bold;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .instruction-title::before {
+        content: "💡";
+        font-size: 1.2rem;
+      }
+
+      .attribute-tooltip {
+        position: relative;
+        display: inline-block;
+        cursor: help;
+      }
+
+      .attribute-tooltip::after {
+        content: "?";
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: rgba(255, 215, 0, 0.2);
+        color: #ffd700;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .tooltip-content {
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--background-dark);
+        color: var(--text-color);
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        width: 200px;
+        z-index: 100;
+        border: 1px solid var(--primary-color);
+        display: none;
+      }
+
+      .attribute-tooltip:focus .tooltip-content,
+      .attribute-tooltip:hover .tooltip-content {
+        display: block;
+      }
+
+      /* Melhorias nas cartas */
+      .card {
+        position: relative;
+      }
+
+      .card-label {
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+      }
+
+      .card-label.player {
+        border: 1px solid #4caf50;
+      }
+
+      .card-label.ia {
+        border: 1px solid #f44336;
+      }
+
+      /* Melhorias de Usabilidade */
+      .tutorial-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--background-dark);
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .tutorial-content {
+        background: var(--background-light);
+        border-radius: 15px;
+        padding: 20px;
+        max-width: 500px;
+        text-align: center;
+      }
+
+      .tutorial-step {
+        display: none;
+      }
+
+      .tutorial-step.active {
+        display: block;
+      }
+
+      .tutorial-navigation {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .tutorial-button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        background: var(--primary-color);
+        color: #000;
+        cursor: pointer;
+      }
+
+      /* Progresso do Jogo */
+      .game-progress {
+        width: 100%;
+        height: 5px;
+        background: var(--background-light);
+        border-radius: 5px;
+        margin: 10px 0;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background: var(--primary-color);
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+
+      /* Botão de Ajuda */
+      .help-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        color: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        cursor: pointer;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      .help-button:active {
+        transform: scale(0.95);
+      }
+
+      .result-message-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 150px;
+        padding: 0 10px;
+      }
+
+      .result-message {
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 0.9rem;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        opacity: 0;
+        transform: scale(0.9);
+        transition: all 0.3s ease;
+      }
+
+      .result-message.show {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .result-message.win {
+        border-color: #4caf50;
+        box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+      }
+
+      .result-message.lose {
+        border-color: #f44336;
+        box-shadow: 0 0 15px rgba(244, 67, 54, 0.3);
+      }
+
+      .result-message.draw {
+        border-color: #ffc107;
+        box-shadow: 0 0 15px rgba(255, 193, 7, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Tutorial Overlay -->
+    <div class="tutorial-overlay" id="tutorialOverlay">
+      <div class="tutorial-content">
+        <div class="tutorial-step active" data-step="1">
+          <h2>Bem-vindo ao Trunfo de Investimentos!</h2>
+          <p>
+            Neste jogo, você competirá contra a IA escolhendo o melhor atributo
+            para suas cartas.
+          </p>
+        </div>
+        <div class="tutorial-step" data-step="2">
+          <h2>Como Jogar</h2>
+          <p>
+            Cada carta representa um tipo de investimento com diferentes
+            características:
+          </p>
+          <ul>
+            <li>Rentabilidade: Quanto maior, melhor</li>
+            <li>Risco: Quanto menor, melhor</li>
+            <li>Liquidez: Quanto maior, melhor</li>
+          </ul>
+        </div>
+        <div class="tutorial-step" data-step="3">
+          <h2>Objetivo</h2>
+          <p>Ganhe mais rodadas que a IA em 10 rodadas para vencer o jogo!</p>
+        </div>
+        <div class="tutorial-navigation">
+          <button class="tutorial-button" id="prevStep">Anterior</button>
+          <button class="tutorial-button" id="nextStep">Próximo</button>
+          <button class="tutorial-button" id="startGame">Começar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="header">
+        <div class="logo">
+          <img src="./img/logo.png" alt="Logo Trunfo de Investimentos" />
+        </div>
+        <div class="player-info">
+          <div class="player-avatar">👤</div>
+          <div class="player-stats">
+            <div class="player-name">Jogador</div>
+            <div class="score">Pontos: 0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-area">
+        <div class="game-instructions">
+          <div class="instruction-title">Como Jogar</div>
+          <p>Escolha um atributo para comparar sua carta com a da IA:</p>
+          <ul>
+            <li><strong>Rentabilidade</strong>: Quanto maior, melhor</li>
+            <li><strong>Risco</strong>: Quanto menor, melhor</li>
+            <li><strong>Liquidez</strong>: Quanto maior, melhor</li>
+          </ul>
+        </div>
+
+        <div class="round-info">
+          <div>Rodada: <span class="score">1/10</span></div>
+          <div>Vitórias: <span class="score">0</span></div>
+        </div>
+
+        <div class="game-status">Escolha um atributo para comparar</div>
+
+        <div class="game-progress">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="cards-container">
+          <div class="card">
+            <div class="card-label player">Sua Carta</div>
+            <div class="card-header">
+              <div class="card-value">R$ 1000</div>
+              <div class="card-icon">📈</div>
+            </div>
+            <div class="card-title">Ação Tech</div>
+            <div class="card-attributes">
+              <div class="attribute">
+                <span class="attribute-tooltip"
+                  >Rentabilidade
+                  <span class="tooltip-content"
+                    >Quanto maior o percentual, maior o retorno do
+                    investimento</span
+                  >
+                </span>
+                <span class="attribute-value">15%</span>
+              </div>
+              <div class="attribute">
+                <span class="attribute-tooltip"
+                  >Risco
+                  <span class="tooltip-content"
+                    >Quanto menor o risco, mais seguro é o investimento</span
+                  >
+                </span>
+                <span class="attribute-value">Alto</span>
+              </div>
+              <div class="attribute">
+                <span class="attribute-tooltip"
+                  >Liquidez
+                  <span class="tooltip-content"
+                    >Quanto maior a liquidez, mais fácil é resgatar o
+                    dinheiro</span
+                  >
+                </span>
+                <span class="attribute-value">Alta</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="result-message-container">
+            <div class="result-message"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-label ia">Carta da IA</div>
+            <div class="card-header">
+              <div class="card-value">R$ 1000</div>
+              <div class="card-icon">🏦</div>
+            </div>
+            <div class="card-title">CDB</div>
+            <div class="card-attributes">
+              <div class="attribute">
+                <span>Rentabilidade</span>
+                <span class="attribute-value">8%</span>
+              </div>
+              <div class="attribute">
+                <span>Risco</span>
+                <span class="attribute-value">Baixo</span>
+              </div>
+              <div class="attribute">
+                <span>Liquidez</span>
+                <span class="attribute-value">Média</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="game-controls">
+          <div class="attribute-selector">
+            <button class="attribute-button" data-attribute="rentabilidade">
+              Rentabilidade
+            </button>
+            <button class="attribute-button" data-attribute="risco">
+              Risco
+            </button>
+            <button class="attribute-button" data-attribute="liquidez">
+              Liquidez
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="help-button" aria-label="Ajuda">?</button>
+
+    <script src="./js/game.js"></script>
+  </body>
+</html>
